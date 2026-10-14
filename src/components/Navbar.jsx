@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, MessageSquare, ArrowRight } from 'lucide-react';
 import { COMPANY_INFO, NAV_LINKS } from '../data/companyData';
 import { Button } from './ui/Button';
@@ -9,6 +10,12 @@ import { navigateTo, scrollToSection, SECTION_TO_PATH, resolveRoute } from '../u
  * Top navigation bar featuring glassmorphic blur, active section scrollspy detection,
  * Dark/Light/System theme toggle, brand logo showcase, responsive mobile drawer menu,
  * and clean URL routing without hash (#) fragments.
+ *
+ * Mobile Drawer & Stacking Architecture:
+ * - Elevated drawer panel (`z-[70]`) and backdrop overlay (`z-[60]`) ensure all underlying
+ *   content and floating buttons (e.g. WhatsAppFloat at `z-50`) stay completely underneath.
+ * - Dedicated top bar inside the mobile drawer provides comfortable spacing between
+ *   brand logo, integrated ThemeToggle, and dedicated close button with zero overlap.
  *
  * @returns {JSX.Element}
  */
@@ -99,10 +106,18 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [activeSection]);
 
-  // Prevent body scrolling when mobile navigation drawer is open
+  // Prevent body scrolling and handle Escape dismissal when mobile navigation drawer is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
+      const handleKeyDown = (e) => {
+        if (e.key === 'Escape') setMobileMenuOpen(false);
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', handleKeyDown);
+      };
     } else {
       document.body.style.overflow = '';
     }
@@ -241,34 +256,89 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Drawer Backdrop Overlay */}
-      <div
-        className={`fixed inset-0 top-0 bg-slate-950/60 dark:bg-black/75 backdrop-blur-sm z-30 transition-opacity duration-300 md:hidden ${
-          mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={() => setMobileMenuOpen(false)}
-        aria-hidden="true"
-      />
+      {/* Mobile Drawer Backdrop Overlay with Highest Priority Stacking (z-[60]) */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-slate-950/70 dark:bg-black/85 backdrop-blur-md z-[60] md:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+      </AnimatePresence>
 
-      {/* Modern Futuristic Mobile Navigation Drawer */}
-      <div
-        className={`fixed top-[58px] sm:top-[72px] left-0 right-0 z-40 md:hidden transition-all duration-300 ease-out origin-top ${
-          mobileMenuOpen
-            ? 'opacity-100 translate-y-0 pointer-events-auto'
-            : 'opacity-0 -translate-y-4 pointer-events-none'
-        }`}
-      >
-        <div className="mx-3 sm:mx-6 rounded-3xl border border-cyan-500/30 dark:border-cyan-500/20 bg-white/95 dark:bg-brand-surface/95 backdrop-blur-2xl px-4 sm:px-6 py-5 shadow-[0_20px_50px_rgba(0,0,0,0.35)] dark:shadow-[0_25px_60px_rgba(0,242,254,0.12)] max-h-[calc(100vh-80px)] overflow-y-auto">
-          {/* Futuristic subtle accent top bar */}
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200 dark:border-brand-border/60">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-cyan-600 dark:text-brand-cyan flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping" />
-              <span>Navigation Menu</span>
-            </span>
-            <span className="text-[10px] font-mono text-brand-textSecondary">
-              v2.4
-            </span>
-          </div>
+      {/* Modern Futuristic Mobile Navigation Drawer with Highest Priority Stacking (z-[70]) */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -12, scale: 0.98 }}
+            transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
+            className="fixed top-2 sm:top-3 inset-x-2.5 sm:inset-x-4 z-[70] md:hidden"
+          >
+            <div className="rounded-3xl border border-cyan-500/30 dark:border-cyan-500/20 bg-white dark:bg-slate-900 shadow-2xl px-4 sm:px-6 py-4 sm:py-5 max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-1.5rem)] overflow-y-auto">
+              {/* Dedicated, well-spaced Mobile Drawer Top Bar (Brand Logo, Theme Toggle & Close Button) */}
+              <div className="flex items-center justify-between gap-3 pb-3.5 mb-3.5 border-b border-slate-200 dark:border-slate-800">
+                {/* Brand Logo & Identity */}
+                <a
+                  href="/"
+                  onClick={(e) => {
+                    setMobileMenuOpen(false);
+                    navigateTo('/', e);
+                  }}
+                  className="flex items-center gap-2 sm:gap-2.5 group focus:outline-none cursor-pointer min-w-0"
+                  aria-label="Nebula Infinite Home"
+                >
+                  <div className="relative flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500/15 via-sky-500/10 to-blue-600/15 border border-cyan-500/30 dark:border-cyan-400/30 p-1 shrink-0">
+                    <img
+                      src={COMPANY_INFO.logo}
+                      alt="Nebula Infinite Logo"
+                      className="w-full h-full object-contain filter drop-shadow"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/Logo.png';
+                      }}
+                    />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-extrabold tracking-tight text-brand-text font-display flex items-center gap-1 truncate">
+                      <span>Nebula</span>
+                      <span className="bg-gradient-to-r from-brand-cyan via-sky-500 to-blue-600 dark:from-brand-cyan dark:via-sky-400 dark:to-blue-500 bg-clip-text text-transparent">
+                        Infinite
+                      </span>
+                    </span>
+                    <span className="text-[8px] font-semibold uppercase tracking-wider text-cyan-600 dark:text-brand-cyan -mt-0.5 whitespace-nowrap">
+                      Software Solutions
+                    </span>
+                  </div>
+                </a>
+
+                {/* Right Controls: Theme Toggle & Close Button without overlap */}
+                <div className="flex items-center gap-2 shrink-0">
+                  <ThemeToggle />
+                  <button
+                    type="button"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2 rounded-xl text-brand-textSecondary hover:text-brand-text hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors focus:outline-none"
+                    aria-label="Close navigation menu"
+                  >
+                    <X className="w-5 h-5 text-brand-text" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Subtle navigation header badge */}
+              <div className="flex items-center justify-between pb-2 mb-2 text-[10px] font-mono text-brand-textSecondary">
+                <span className="uppercase tracking-widest text-cyan-600 dark:text-brand-cyan flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-ping" />
+                  <span>Navigation Menu</span>
+                </span>
+                <span>v2.4</span>
+              </div>
 
           <nav className="flex flex-col gap-1.5">
             {NAV_LINKS.map((link, idx) => {
@@ -352,8 +422,10 @@ export function Navbar() {
             </a>
           </div>
         </div>
-      </div>
-    </>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</>
   );
 }
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   Phone,
   Mail,
@@ -9,15 +10,80 @@ import {
   Clock,
   Sparkles,
   AlertCircle,
+  MonitorCheck,
+  Building2,
+  Globe2,
+  Smartphone,
+  Cpu,
 } from 'lucide-react';
-import { COMPANY_INFO, SERVICES } from '../data/companyData';
+import { COMPANY_INFO } from '../data/companyData';
 import { Card } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { Button } from './ui/Button';
+import { SearchableSelect } from './ui/SearchableSelect';
+import {
+  defaultViewport,
+  fadeUpVariant,
+  slideInLeftVariant,
+  slideInRightVariant,
+} from '../utils/motion';
+
+/**
+ * Service options configuration with rich Lucide icons, descriptive tags, and metadata
+ * utilized by the custom SearchableSelect component.
+ */
+const SERVICE_OPTIONS = [
+  {
+    value: 'Custom POS System',
+    label: 'Custom POS System',
+    icon: MonitorCheck,
+    badge: 'Retail & Dining',
+    description: 'Thermal billing, offline mode, and barcode scanner sync',
+  },
+  {
+    value: 'Enterprise ERP Solution',
+    label: 'Enterprise ERP Solution',
+    icon: Building2,
+    badge: 'Enterprise',
+    description: 'Multi-branch inventory, financial ledgers, and role security',
+  },
+  {
+    value: 'Web & E-Commerce Platform',
+    label: 'Web & E-Commerce Platform',
+    icon: Globe2,
+    badge: 'High Conversion',
+    description: 'Ultra-fast storefronts, payment gateways, and client portals',
+  },
+  {
+    value: 'Cross-Platform Mobile App',
+    label: 'Cross-Platform Mobile App',
+    icon: Smartphone,
+    badge: 'iOS & Android',
+    description: 'High-performance apps built with Flutter and React Native',
+  },
+  {
+    value: 'Smart Automation & Cloud',
+    label: 'Smart Automation & Cloud',
+    icon: Cpu,
+    badge: 'Automation',
+    description: 'Custom API gateways, automated WhatsApp/SMS bots, cloud infrastructure',
+  },
+  {
+    value: 'Other Bespoke Engineering',
+    label: 'Other Bespoke Engineering',
+    icon: Sparkles,
+    badge: 'Custom',
+    description: 'Specialized enterprise software, IoT integrations, legacy modernization',
+  },
+];
 
 /**
  * Contact section with company reachability info, interactive inquiry form,
  * direct WhatsApp dispatch, social channels (Facebook & LinkedIn), and embedded Google Maps view.
+ *
+ * Enhanced with:
+ * - Fluid Framer Motion viewport-triggered animations (fade-up, slide-in columns).
+ * - Custom animated SearchableSelect component replacing native HTML <select>.
  *
  * @returns {JSX.Element}
  */
@@ -33,6 +99,10 @@ export function Contact() {
   const [formStatus, setFormStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
   const [feedbackMsg, setFeedbackMsg] = useState('');
 
+  /**
+   * Generic input change handler supporting both standard HTML inputs
+   * and synthetic events dispatched by the custom SearchableSelect component.
+   */
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -89,7 +159,13 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-24 bg-brand-bg overflow-hidden transition-colors duration-300">
+    <motion.section
+      id="contact"
+      initial="hidden"
+      whileInView="visible"
+      viewport={defaultViewport}
+      className="relative py-24 bg-brand-bg overflow-hidden transition-colors duration-300"
+    >
       {/* Background Graphic Blend */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
         <div className="absolute top-1/3 -right-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-[120px]" />
@@ -98,7 +174,10 @@ export function Contact() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header with explicit badge container to prevent floating overlaps on mobile */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 flex flex-col items-center">
+        <motion.div
+          variants={fadeUpVariant}
+          className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 flex flex-col items-center"
+        >
           <div className="relative z-10 inline-flex items-center justify-center mb-3 sm:mb-4">
             <Badge variant="cyan" pulse={true} className="relative z-10">
               Connect With Our Engineers
@@ -114,11 +193,14 @@ export function Contact() {
             Reach out directly for project quotes, technical consultations, or live POS & ERP demos.
             Our team responds promptly within 2-4 business hours.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Left Column: Direct Contact Details, Social Channels & Map */}
-          <div className="lg:col-span-5 space-y-6">
+          <motion.div
+            variants={slideInLeftVariant}
+            className="lg:col-span-5 space-y-6"
+          >
             {/* Quick Contact Cards */}
             <div className="space-y-4">
               {/* WhatsApp & Phone */}
@@ -225,11 +307,14 @@ export function Contact() {
                 Makandura, Matara, Sri Lanka
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Interactive Consultation & Quote Form */}
-          <div className="lg:col-span-7">
-            <Card className="p-6 sm:p-8 bg-white dark:bg-brand-surface border-slate-200 dark:border-brand-border shadow-md">
+          <motion.div
+            variants={slideInRightVariant}
+            className="lg:col-span-7"
+          >
+            <Card className="p-6 sm:p-8 bg-white dark:bg-brand-surface border-slate-200 dark:border-brand-border shadow-md overflow-visible">
               <div className="mb-6">
                 <h3 className="text-xl sm:text-2xl font-bold text-brand-text font-display">
                   Send Project Inquiry
@@ -316,28 +401,23 @@ export function Contact() {
                     />
                   </div>
 
-                  {/* Service Selection */}
-                  <div>
+                  {/* Custom Searchable Service Selection (Replaced native HTML <select>) */}
+                  <div className="relative">
                     <label
                       htmlFor="service"
                       className="block text-xs font-semibold uppercase tracking-wider text-brand-textSecondary mb-1.5"
                     >
                       Primary Service Needed
                     </label>
-                    <select
+                    <SearchableSelect
                       id="service"
                       name="service"
                       value={formData.service}
                       onChange={handleChange}
-                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-brand-card border border-slate-300 dark:border-brand-border text-brand-text text-sm focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
-                    >
-                      <option value="Custom POS System">Custom POS System</option>
-                      <option value="Enterprise ERP Solution">Enterprise ERP Solution</option>
-                      <option value="Web & E-Commerce Platform">Web & E-Commerce Platform</option>
-                      <option value="Cross-Platform Mobile App">Cross-Platform Mobile App</option>
-                      <option value="Smart Automation & Cloud">Smart Automation & Cloud</option>
-                      <option value="Other Bespoke Engineering">Other Bespoke Engineering</option>
-                    </select>
+                      options={SERVICE_OPTIONS}
+                      placeholder="Select primary service..."
+                      searchPlaceholder="Search services (e.g. POS, ERP, Web)..."
+                    />
                   </div>
                 </div>
 
@@ -389,9 +469,9 @@ export function Contact() {
                 </div>
               </form>
             </Card>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

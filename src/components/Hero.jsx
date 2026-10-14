@@ -1,21 +1,34 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { ArrowRight, MessageSquare, Sparkles, CheckCircle2, ShieldCheck, Zap, Terminal } from 'lucide-react';
 import { COMPANY_INFO } from '../data/companyData';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
 import { navigateTo } from '../utils/navigation';
+import {
+  defaultViewport,
+  fadeUpVariant,
+  slideInLeftVariant,
+  slideInRightVariant,
+  staggerContainer,
+} from '../utils/motion';
 
 /**
  * Hero section delivering high-impact value proposition, key metrics,
  * live interactive terminal preview card, and direct conversion CTAs.
  * Built with futuristic glassmorphism and multi-theme support.
  *
+ * Enhanced with Framer Motion scroll-triggered animations and staggered child entrances.
+ *
  * @returns {JSX.Element}
  */
 export function Hero() {
   return (
-    <section
+    <motion.section
       id="hero"
+      initial="hidden"
+      whileInView="visible"
+      viewport={defaultViewport}
       className="relative min-h-[92vh] pt-32 pb-20 flex items-center justify-center overflow-hidden"
     >
       {/* Background Graphic & Subtle Ambient Illumination */}
@@ -34,7 +47,10 @@ export function Hero() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Headline, Copy & CTAs */}
-          <div className="lg:col-span-7 text-center lg:text-left space-y-7">
+          <motion.div
+            variants={slideInLeftVariant}
+            className="lg:col-span-7 text-center lg:text-left space-y-7"
+          >
             {/* Live Indicator Pill with relative positioning */}
             <div className="relative z-10 flex flex-wrap items-center justify-center lg:justify-start gap-2">
               <Badge variant="cyan" pulse={true} className="py-1 px-3 sm:px-3.5 relative">
@@ -106,10 +122,13 @@ export function Hero() {
                 <span>Offline-Resilient POS Architecture</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Visual Interactive Terminal / Live Preview Card */}
-          <div className="lg:col-span-5 relative">
+          <motion.div
+            variants={slideInRightVariant}
+            className="lg:col-span-5 relative"
+          >
             <div className="relative mx-auto max-w-md lg:max-w-none">
               {/* Outer decorative glow */}
               <div className="absolute -inset-1.5 bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 rounded-3xl blur-xl opacity-20 dark:opacity-35 animate-pulse-slow" />
@@ -191,11 +210,14 @@ export function Hero() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Global Statistics Ribbon - Theme-aware high contrast metric cards */}
-        <div className="mt-16 pt-10 border-t border-slate-200/80 dark:border-brand-border/60 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <motion.div
+          variants={fadeUpVariant}
+          className="mt-16 pt-10 border-t border-slate-200/80 dark:border-brand-border/60 grid grid-cols-2 md:grid-cols-4 gap-6 text-center"
+        >
           {COMPANY_INFO.stats.map((stat, idx) => (
             <div key={idx} className="p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 backdrop-blur-sm shadow-xs dark:shadow-sm">
               <div className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-slate-950 via-sky-800 to-blue-800 dark:from-white dark:via-cyan-300 dark:to-cyan-400 bg-clip-text text-transparent font-display">
@@ -206,8 +228,8 @@ export function Hero() {
               </div>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Maximize2, Sparkles, MessageSquare, ArrowRight, Tag } from 'lucide-react';
 import { GALLERY_ITEMS, GALLERY_CATEGORIES, COMPANY_INFO } from '../data/companyData';
 import { Badge } from './ui/Badge';
 import { Button } from './ui/Button';
 import { Modal } from './ui/Modal';
+import {
+  defaultViewport,
+  fadeUpVariant,
+  staggerContainer,
+} from '../utils/motion';
 
 /**
  * Portfolio & Gallery component showcasing Nebula Infinite's verified client projects,
  * ERP systems, POS terminals, e-commerce web applications, and mobile apps.
- * Utilizes compressed PNG image assets located in /images/gallery with high-resolution preview modal.
+ *
+ * Enhanced with Framer Motion viewport scroll animations, smooth category tab transitions,
+ * and card elevation micro-interactions.
  *
  * @returns {JSX.Element}
  */
@@ -23,14 +31,23 @@ export function Gallery() {
       : GALLERY_ITEMS.filter((item) => item.categoryKey === activeCategory);
 
   return (
-    <section id="gallery" className="relative py-24 bg-slate-50/50 dark:bg-brand-surface/40 overflow-hidden transition-colors duration-300">
+    <motion.section
+      id="gallery"
+      initial="hidden"
+      whileInView="visible"
+      viewport={defaultViewport}
+      className="relative py-24 bg-slate-50/50 dark:bg-brand-surface/40 overflow-hidden transition-colors duration-300"
+    >
       {/* Background Glows */}
       <div className="absolute top-1/4 right-0 w-80 h-80 bg-cyan-500/5 dark:bg-cyan-500/10 rounded-full blur-[130px] pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-600/5 dark:bg-blue-600/10 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Heading with explicit badge container to prevent floating overlaps on mobile */}
-        <div className="text-center max-w-3xl mx-auto mb-12 flex flex-col items-center">
+        <motion.div
+          variants={fadeUpVariant}
+          className="text-center max-w-3xl mx-auto mb-12 flex flex-col items-center"
+        >
           <div className="relative z-10 inline-flex items-center justify-center mb-3 sm:mb-4">
             <Badge variant="cyan" pulse={true} className="relative z-10">
               Proven Track Record
@@ -46,101 +63,121 @@ export function Gallery() {
             Explore live production builds spanning enterprise ERPs, high-throughput retail POS terminals,
             responsive e-commerce ecosystems, and cross-platform mobile apps.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Filter Category Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-12">
+        {/* Filter Category Tabs with micro-interactions */}
+        <motion.div
+          variants={fadeUpVariant}
+          className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-12"
+        >
           {GALLERY_CATEGORIES.map((cat) => {
             const isActive = activeCategory === cat.key;
             return (
-              <button
+              <motion.button
                 key={cat.key}
                 type="button"
                 onClick={() => setActiveCategory(cat.key)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-300 focus:outline-none ${
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                transition={{ duration: 0.15 }}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors duration-200 focus:outline-none ${
                   isActive
-                    ? 'bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-brand-cyan dark:to-blue-500 text-white dark:text-slate-950 shadow-[0_4px_20px_rgba(2,132,199,0.25)] dark:shadow-[0_0_20px_rgba(0,242,254,0.35)] scale-105'
+                    ? 'bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-brand-cyan dark:to-blue-500 text-white dark:text-slate-950 shadow-[0_4px_20px_rgba(2,132,199,0.25)] dark:shadow-[0_0_20px_rgba(0,242,254,0.35)]'
                     : 'bg-white dark:bg-brand-surface border border-slate-200 dark:border-brand-border text-brand-textSecondary hover:text-brand-text hover:border-cyan-500/40 shadow-xs'
                 }`}
               >
                 {cat.label}
-              </button>
+              </motion.button>
             );
           })}
-        </div>
+        </motion.div>
 
-        {/* Project Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {filteredItems.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => setSelectedProject(item)}
-              className="group relative rounded-2xl bg-white dark:bg-brand-surface border border-slate-200 dark:border-brand-border overflow-hidden cursor-pointer hover:border-cyan-500/60 hover:shadow-[0_12px_35px_rgba(2,132,199,0.12)] dark:hover:shadow-[0_10px_35px_rgba(0,242,254,0.18)] transition-all duration-300 flex flex-col justify-between shadow-xs"
-            >
-              {/* Image Container */}
-              <div className="relative aspect-[16/10] overflow-hidden bg-slate-900 dark:bg-slate-950">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-108 group-hover:brightness-105"
-                  loading="lazy"
-                  onError={(e) => {
-                    // Fallback to high-resolution JPEG asset in /images/gallery if PNG is unavailable
-                    const fallbackSrc = item.image.replace('.png', '.jpg');
-                    if (e.currentTarget.src !== fallbackSrc) {
-                      e.currentTarget.src = fallbackSrc;
-                    }
-                  }}
-                />
-                {/* Subtle dark vignette over bottom of image */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-80" />
+        {/* Project Cards Grid with staggered entrance and layout animation */}
+        <motion.div
+          layout
+          variants={staggerContainer(0.06)}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+        >
+          <AnimatePresence>
+            {filteredItems.map((item) => (
+              <motion.div
+                key={item.id}
+                layout
+                variants={fadeUpVariant}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
+                whileHover={{ y: -6 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSelectedProject(item)}
+                className="group relative rounded-2xl bg-white dark:bg-brand-surface border border-slate-200 dark:border-brand-border overflow-hidden cursor-pointer hover:border-cyan-500/60 hover:shadow-[0_12px_35px_rgba(2,132,199,0.12)] dark:hover:shadow-[0_10px_35px_rgba(0,242,254,0.18)] transition-colors duration-300 flex flex-col justify-between shadow-xs select-none"
+              >
+                {/* Image Container */}
+                <div className="relative aspect-[16/10] overflow-hidden bg-slate-900 dark:bg-slate-950">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-108 group-hover:brightness-105"
+                    loading="lazy"
+                    onError={(e) => {
+                      // Fallback to high-resolution JPEG asset in /images/gallery if PNG is unavailable
+                      const fallbackSrc = item.image.replace('.png', '.jpg');
+                      if (e.currentTarget.src !== fallbackSrc) {
+                        e.currentTarget.src = fallbackSrc;
+                      }
+                    }}
+                  />
+                  {/* Subtle dark vignette over bottom of image */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-80" />
 
-                {/* Top overlay category badge */}
-                <div className="absolute top-3 left-3">
-                  <Badge variant="blue" className="text-[10px] py-0.5">
-                    {item.category}
-                  </Badge>
-                </div>
+                  {/* Top overlay category badge */}
+                  <div className="absolute top-3 left-3">
+                    <Badge variant="blue" className="text-[10px] py-0.5">
+                      {item.category}
+                    </Badge>
+                  </div>
 
-                {/* Hover overlay with zoom icon */}
-                <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full bg-cyan-400 text-slate-950 flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform duration-300">
-                    <Maximize2 className="w-5 h-5" />
+                  {/* Hover overlay with zoom icon */}
+                  <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-cyan-400 text-slate-950 flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform duration-300">
+                      <Maximize2 className="w-5 h-5" />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Text Info */}
-              <div className="p-5 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-brand-text group-hover:text-cyan-600 dark:group-hover:text-brand-cyan transition-colors line-clamp-1">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-xs text-brand-textSecondary line-clamp-2 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-
-                {/* Tags & Action prompt */}
-                <div className="mt-4 pt-3 border-t border-slate-200 dark:border-brand-border flex items-center justify-between">
-                  <div className="flex flex-wrap gap-1">
-                    {item.tags.slice(0, 2).map((tag, idx) => (
-                      <span
-                        key={idx}
-                        className="text-[10px] font-semibold text-cyan-800 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 px-2 py-0.5 rounded-md border border-cyan-200/90 dark:border-cyan-500/40"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
+                {/* Text Info */}
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-lg font-bold text-brand-text group-hover:text-cyan-600 dark:group-hover:text-brand-cyan transition-colors line-clamp-1">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-xs text-brand-textSecondary line-clamp-2 leading-relaxed">
+                      {item.description}
+                    </p>
                   </div>
-                  <span className="text-xs text-brand-textSecondary group-hover:text-cyan-600 dark:group-hover:text-brand-cyan font-medium flex items-center gap-1 transition-colors">
-                    View Details <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
+
+                  {/* Tags & Action prompt */}
+                  <div className="mt-4 pt-3 border-t border-slate-200 dark:border-brand-border flex items-center justify-between">
+                    <div className="flex flex-wrap gap-1">
+                      {item.tags.slice(0, 2).map((tag, idx) => (
+                        <span
+                          key={idx}
+                          className="text-[10px] font-semibold text-cyan-800 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 px-2 py-0.5 rounded-md border border-cyan-200/90 dark:border-cyan-500/40"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="text-xs text-brand-textSecondary group-hover:text-cyan-600 dark:group-hover:text-brand-cyan font-medium flex items-center gap-1 transition-colors">
+                      View Details <ArrowRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
 
         {/* Lightbox / Details Modal */}
         <Modal
@@ -217,6 +254,6 @@ export function Gallery() {
           )}
         </Modal>
       </div>
-    </section>
+    </motion.section>
   );
 }

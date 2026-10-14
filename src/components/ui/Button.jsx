@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '../../utils/cn';
 
 /**
@@ -19,7 +20,8 @@ import { cn } from '../../utils/cn';
 
 /**
  * Reusable high-converting button component supporting multiple themes.
- * Automatically adapts between a native <button> and an <a> link if href is provided.
+ * Automatically adapts between a Framer Motion animated <button> and <a> link if href is provided.
+ * Features fluid micro-interactions (hover scale & tap squish) with hardware-accelerated transforms.
  *
  * @param {ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement> & React.AnchorHTMLAttributes<HTMLAnchorElement>} props
  * @returns {JSX.Element}
@@ -37,7 +39,7 @@ export function Button({
   ...rest
 }) {
   const baseStyles =
-    'relative inline-flex items-center justify-center font-medium transition-all duration-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-cyan/50 active:scale-[0.98] select-none cursor-pointer';
+    'relative inline-flex items-center justify-center font-medium transition-colors duration-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-cyan/50 select-none cursor-pointer';
 
   const sizeStyles = {
     sm: 'text-xs px-3.5 py-1.5 gap-1.5',
@@ -55,7 +57,7 @@ export function Button({
     ghost:
       'text-brand-textSecondary hover:text-brand-cyan hover:bg-slate-100 dark:hover:bg-brand-card/60',
     glow:
-      'bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-brand-cyan dark:to-blue-500 text-white dark:text-slate-950 font-bold shadow-[0_4px_20px_rgba(2,132,199,0.3)] dark:shadow-[0_0_25px_rgba(0,242,254,0.4)] hover:shadow-[0_6px_25px_rgba(2,132,199,0.45)] dark:hover:shadow-[0_0_35px_rgba(0,242,254,0.65)] hover:scale-[1.02]',
+      'bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-brand-cyan dark:to-blue-500 text-white dark:text-slate-950 font-bold shadow-[0_4px_20px_rgba(2,132,199,0.3)] dark:shadow-[0_0_25px_rgba(0,242,254,0.4)] hover:shadow-[0_6px_25px_rgba(2,132,199,0.45)] dark:hover:shadow-[0_0_35px_rgba(0,242,254,0.65)]',
   };
 
   const disabledStyles = disabled
@@ -70,32 +72,40 @@ export function Button({
     className
   );
 
+  const motionProps = {
+    whileHover: disabled ? undefined : { scale: 1.02 },
+    whileTap: disabled ? undefined : { scale: 0.98 },
+    transition: { duration: 0.18, ease: [0.25, 1, 0.5, 1] },
+  };
+
   if (href) {
     return (
-      <a
+      <motion.a
         href={href}
         className={combinedClasses}
         onClick={onClick}
+        {...motionProps}
         {...rest}
       >
         {icon && <span className="inline-flex shrink-0">{icon}</span>}
         <span>{children}</span>
         {iconRight && <span className="inline-flex shrink-0">{iconRight}</span>}
-      </a>
+      </motion.a>
     );
   }
 
   return (
-    <button
+    <motion.button
       type={rest.type || 'button'}
       className={combinedClasses}
       disabled={disabled}
       onClick={onClick}
+      {...motionProps}
       {...rest}
     >
       {icon && <span className="inline-flex shrink-0">{icon}</span>}
       <span>{children}</span>
       {iconRight && <span className="inline-flex shrink-0">{iconRight}</span>}
-    </button>
+    </motion.button>
   );
 }

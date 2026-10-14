@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import {
   Layers,
   Zap,
@@ -16,6 +17,13 @@ import { Card } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { Button } from './ui/Button';
 import { navigateTo } from '../utils/navigation';
+import {
+  defaultViewport,
+  fadeUpVariant,
+  slideInLeftVariant,
+  slideInRightVariant,
+  staggerContainer,
+} from '../utils/motion';
 
 // Icon mapping for value pillars
 const pillarIcons = {
@@ -29,11 +37,19 @@ const pillarIcons = {
  * About section presenting Nebula Infinite's foundational story, leadership,
  * building & headquarters brand imagery, architectural values, and 24/7 support commitment.
  *
+ * Enhanced with Framer Motion viewport scroll triggers, split column slide-ins, and staggered pillars.
+ *
  * @returns {JSX.Element}
  */
 export function About() {
   return (
-    <section id="about" className="relative py-24 bg-brand-bg overflow-hidden transition-colors duration-300">
+    <motion.section
+      id="about"
+      initial="hidden"
+      whileInView="visible"
+      viewport={defaultViewport}
+      className="relative py-24 bg-brand-bg overflow-hidden transition-colors duration-300"
+    >
       {/* Background Graphic Ambient Blend */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px]" />
@@ -42,7 +58,10 @@ export function About() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Top Header with explicit badge container to prevent floating overlaps on mobile */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 flex flex-col items-center">
+        <motion.div
+          variants={fadeUpVariant}
+          className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 flex flex-col items-center"
+        >
           <div className="relative z-10 inline-flex items-center justify-center mb-3 sm:mb-4">
             <Badge variant="cyan" pulse={true} className="relative z-10">
               Architects of Innovation
@@ -58,10 +77,13 @@ export function About() {
             Founded on September 1, 2023, Nebula Infinite is driven by a singular mandate:
             engineering robust software systems that convert complex business hurdles into effortless competitive advantages.
           </p>
-        </div>
+        </motion.div>
 
         {/* Prominent Building & Brand Imagery Showcase */}
-        <div className="mb-16 rounded-3xl overflow-hidden border border-slate-200 dark:border-brand-border bg-slate-950 shadow-2xl relative group">
+        <motion.div
+          variants={fadeUpVariant}
+          className="mb-16 rounded-3xl overflow-hidden border border-slate-200 dark:border-brand-border bg-slate-950 shadow-2xl relative group"
+        >
           <div className="relative aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] min-h-[280px] sm:min-h-0 max-h-[460px] w-full overflow-hidden">
             <img
               src={COMPANY_INFO.buildingLandscape}
@@ -97,11 +119,14 @@ export function About() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Narrative & Inception Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-16">
-          <div className="lg:col-span-7 space-y-6">
+          <motion.div
+            variants={slideInLeftVariant}
+            className="lg:col-span-7 space-y-6"
+          >
             <h3 className="text-2xl sm:text-3xl font-bold text-brand-text font-display">
               More Than a Software House — Your Strategic Engineering Ally.
             </h3>
@@ -133,18 +158,23 @@ export function About() {
                 <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">24/7 Client Support</p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Founders & Leadership Showcase */}
-          <div className="lg:col-span-5 space-y-4">
+          <motion.div
+            variants={slideInRightVariant}
+            className="lg:col-span-5 space-y-4"
+          >
             <h4 className="text-xs uppercase tracking-widest font-semibold text-cyan-700 dark:text-cyan-400">
               Executive Leadership
             </h4>
 
             {COMPANY_INFO.founders.map((founder, idx) => (
-              <div
+              <motion.div
                 key={idx}
-                className="p-5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/40 transition-all duration-300 shadow-xs hover:shadow-md relative group overflow-hidden"
+                whileHover={{ y: -4 }}
+                transition={{ duration: 0.2 }}
+                className="p-5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/40 transition-colors duration-200 shadow-xs hover:shadow-md relative group overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-xl group-hover:bg-cyan-500/10 transition-colors" />
                 <div className="flex items-start gap-4">
@@ -167,50 +197,64 @@ export function About() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
 
         {/* Why Choose Nebula Infinite - 4 Core Pillars */}
         <div className="mt-16 pt-12 border-t border-slate-200 dark:border-brand-border">
-          <div className="text-center max-w-2xl mx-auto mb-12">
+          <motion.div
+            variants={fadeUpVariant}
+            className="text-center max-w-2xl mx-auto mb-12"
+          >
             <h3 className="text-2xl sm:text-3xl font-extrabold text-brand-text font-display">
               Why Sri Lankan & Global Businesses Choose Us
             </h3>
             <p className="text-sm text-brand-textSecondary mt-2">
               Our engineering philosophy guarantees lasting reliability and direct commercial return on your software investment.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <motion.div
+            variants={staggerContainer(0.08)}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
             {WHY_CHOOSE_US.map((pillar, idx) => {
               const IconComp = pillarIcons[pillar.icon] || ShieldCheck;
               return (
-                <Card
+                <motion.div
                   key={idx}
-                  className="p-6 bg-white dark:bg-brand-surface hover:border-cyan-500/50 flex flex-col justify-between shadow-xs hover:shadow-md"
+                  variants={fadeUpVariant}
+                  className="flex flex-col"
                 >
-                  <div className="space-y-3">
-                    {/* Theme-aware pillar icon container with high-contrast icon visibility */}
-                    <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200/90 dark:border-cyan-500/40 flex items-center justify-center shadow-xs">
-                      <IconComp className="w-5 h-5 text-cyan-700 dark:text-cyan-400" />
+                  <Card
+                    className="p-6 h-full bg-white dark:bg-brand-surface hover:border-cyan-500/50 flex flex-col justify-between shadow-xs hover:shadow-md"
+                  >
+                    <div className="space-y-3">
+                      {/* Theme-aware pillar icon container with high-contrast icon visibility */}
+                      <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200/90 dark:border-cyan-500/40 flex items-center justify-center shadow-xs">
+                        <IconComp className="w-5 h-5 text-cyan-700 dark:text-cyan-400" />
+                      </div>
+                      <h4 className="text-base font-bold text-brand-text">
+                        {pillar.title}
+                      </h4>
+                      <p className="text-xs text-brand-textSecondary leading-relaxed">
+                        {pillar.description}
+                      </p>
                     </div>
-                    <h4 className="text-base font-bold text-brand-text">
-                      {pillar.title}
-                    </h4>
-                    <p className="text-xs text-brand-textSecondary leading-relaxed">
-                      {pillar.description}
-                    </p>
-                  </div>
-                </Card>
+                  </Card>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
 
         {/* Call-to-action bar */}
-        <div className="mt-16 flex justify-center">
+        <motion.div
+          variants={fadeUpVariant}
+          className="mt-16 flex justify-center"
+        >
           <Button
             href="/contact"
             onClick={(e) => navigateTo('/contact', e)}
@@ -221,8 +265,8 @@ export function About() {
           >
             Partner With Nebula Infinite Today
           </Button>
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }

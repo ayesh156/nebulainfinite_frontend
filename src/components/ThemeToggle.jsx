@@ -4,7 +4,10 @@ import { useTheme } from '../context/ThemeContext';
 
 /**
  * Accessible theme selector toggle button supporting Dark, Light, and System modes.
- * Features smooth micro-animations, keyboard accessibility, and a contextual dropdown.
+ * Features:
+ * - Opaque, solid background (`bg-white dark:bg-slate-900`) and crisp borders (`border-slate-200 dark:border-slate-800`).
+ * - Elevated `z-50` stacking context preventing underlying navigation items or page buttons from bleeding through.
+ * - Smooth micro-animations, keyboard accessibility (Escape dismissal), and click-outside handling.
  *
  * @param {{ className?: string }} props
  * @returns {JSX.Element}
@@ -45,14 +48,17 @@ export function ThemeToggle({ className = '' }) {
   ];
 
   return (
-    <div className={`relative inline-block ${className}`} ref={dropdownRef}>
+    <div
+      className={`relative inline-block ${isOpen ? 'z-50' : ''} ${className}`}
+      ref={dropdownRef}
+    >
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         aria-label={`Toggle color theme. Current theme: ${theme} (resolved: ${resolvedTheme})`}
         aria-haspopup="true"
         aria-expanded={isOpen}
-        className="relative flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 dark:border-brand-border bg-white/90 dark:bg-brand-surface/80 hover:bg-slate-100 dark:hover:bg-brand-card hover:border-cyan-500/50 text-brand-textSecondary hover:text-cyan-600 dark:hover:text-brand-cyan transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 shadow-xs"
+        className="relative flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 dark:border-brand-border bg-white dark:bg-brand-surface hover:bg-slate-100 dark:hover:bg-brand-card hover:border-cyan-500/50 text-brand-textSecondary hover:text-cyan-600 dark:hover:text-brand-cyan transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/40 shadow-xs"
       >
         <div className="relative w-4 h-4 flex items-center justify-center">
           {resolvedTheme === 'dark' ? (
@@ -64,12 +70,13 @@ export function ThemeToggle({ className = '' }) {
         <span className="sr-only">Toggle theme</span>
       </button>
 
-      {/* Accessible Mode Dropdown */}
+      {/* Accessible Mode Dropdown with Solid Background & Elevated Stacking (z-50) */}
       {isOpen && (
         <div
           role="menu"
           aria-orientation="vertical"
-          className="absolute right-0 mt-2 w-36 rounded-xl bg-white/98 dark:bg-brand-surface/95 border border-slate-200 dark:border-brand-border/80 shadow-xl backdrop-blur-xl p-1 z-50 animate-in fade-in zoom-in-95 duration-150"
+          className="absolute right-0 mt-2 w-36 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-1 z-50 animate-in fade-in zoom-in-95 duration-150"
+          style={{ zIndex: 50 }}
         >
           {options.map((opt) => {
             const Icon = opt.icon;
@@ -85,8 +92,8 @@ export function ThemeToggle({ className = '' }) {
                 }}
                 className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   isSelected
-                    ? 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 font-semibold border border-cyan-500/30'
-                    : 'text-brand-textSecondary hover:text-brand-text hover:bg-slate-100 dark:hover:bg-brand-card'
+                    ? 'bg-cyan-50 dark:bg-cyan-950/70 text-cyan-700 dark:text-cyan-300 font-semibold border border-cyan-500/30'
+                    : 'text-brand-textSecondary hover:text-brand-text hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
                 <div className="flex items-center gap-2">
