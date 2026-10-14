@@ -115,40 +115,41 @@ export function About() {
               is crafted with meticulous attention to clean code, fail-safe redundancy, and user delight.
             </p>
 
-            {/* Quick Milestones */}
+            {/* Quick Milestones - High contrast icons and legible text */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
-              <div className="p-3.5 rounded-xl bg-white dark:bg-brand-surface border border-slate-200 dark:border-brand-border shadow-xs">
-                <Calendar className="w-5 h-5 text-cyan-600 dark:text-brand-cyan mb-1.5" />
+              <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-xs">
+                <Calendar className="w-5 h-5 text-cyan-700 dark:text-cyan-400 mb-1.5" />
                 <p className="text-xs text-brand-textSecondary">Founded</p>
                 <p className="text-sm font-bold text-brand-text">{COMPANY_INFO.foundedDate}</p>
               </div>
-              <div className="p-3.5 rounded-xl bg-white dark:bg-brand-surface border border-slate-200 dark:border-brand-border shadow-xs">
-                <Users className="w-5 h-5 text-sky-600 dark:text-sky-400 mb-1.5" />
+              <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-xs">
+                <Users className="w-5 h-5 text-sky-700 dark:text-sky-400 mb-1.5" />
                 <p className="text-xs text-brand-textSecondary">Headquarters</p>
                 <p className="text-sm font-bold text-brand-text">{COMPANY_INFO.location}</p>
               </div>
-              <div className="p-3.5 rounded-xl bg-white dark:bg-brand-surface border border-slate-200 dark:border-brand-border col-span-2 sm:col-span-1 shadow-xs">
-                <Award className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mb-1.5" />
+              <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 col-span-2 sm:col-span-1 shadow-xs">
+                <Award className="w-5 h-5 text-emerald-700 dark:text-emerald-400 mb-1.5" />
                 <p className="text-xs text-brand-textSecondary">Availability</p>
-                <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">24/7 Client Support</p>
+                <p className="text-sm font-bold text-emerald-700 dark:text-emerald-400">24/7 Client Support</p>
               </div>
             </div>
           </div>
 
           {/* Founders & Leadership Showcase */}
           <div className="lg:col-span-5 space-y-4">
-            <h4 className="text-xs uppercase tracking-widest font-semibold text-cyan-600 dark:text-brand-cyan">
+            <h4 className="text-xs uppercase tracking-widest font-semibold text-cyan-700 dark:text-cyan-400">
               Executive Leadership
             </h4>
 
             {COMPANY_INFO.founders.map((founder, idx) => (
               <div
                 key={idx}
-                className="p-5 rounded-2xl bg-white dark:bg-brand-surface border border-slate-200 dark:border-brand-border hover:border-cyan-500/40 transition-all duration-300 shadow-xs hover:shadow-md relative group overflow-hidden"
+                className="p-5 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/40 transition-all duration-300 shadow-xs hover:shadow-md relative group overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-xl group-hover:bg-cyan-500/10 transition-colors" />
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-cyan-50 dark:bg-gradient-to-tr dark:from-cyan-500/20 dark:to-blue-600/30 border border-cyan-200 dark:border-cyan-400/30 flex items-center justify-center font-bold text-cyan-700 dark:text-brand-cyan font-display text-lg shrink-0">
+                  {/* Theme-aware executive leadership avatar tile with high-contrast initials ("AC", "SJ") */}
+                  <div className="w-12 h-12 rounded-xl bg-cyan-100/90 dark:bg-slate-950 border border-cyan-300/80 dark:border-cyan-500/40 flex items-center justify-center font-extrabold text-blue-950 dark:text-cyan-300 font-display text-lg shrink-0 shadow-xs dark:shadow-[0_0_15px_rgba(0,242,254,0.15)] group-hover:scale-105 transition-transform duration-300">
                     {founder.name
                       .split(' ')
                       .map((n) => n[0])
@@ -158,7 +159,7 @@ export function About() {
                     <h5 className="text-lg font-bold text-brand-text group-hover:text-cyan-600 dark:group-hover:text-brand-cyan transition-colors">
                       {founder.name}
                     </h5>
-                    <p className="text-xs font-semibold text-cyan-600 dark:text-brand-cyan mt-0.5">
+                    <p className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 mt-0.5">
                       {founder.role}
                     </p>
                     <p className="text-xs text-brand-textSecondary mt-2 leading-relaxed">
@@ -191,8 +192,9 @@ export function About() {
                   className="p-6 bg-white dark:bg-brand-surface hover:border-cyan-500/50 flex flex-col justify-between shadow-xs hover:shadow-md"
                 >
                   <div className="space-y-3">
-                    <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-500/15 border border-cyan-200 dark:border-cyan-500/30 flex items-center justify-center">
-                      <IconComp className="w-5 h-5 text-cyan-600 dark:text-brand-cyan" />
+                    {/* Theme-aware pillar icon container with high-contrast icon visibility */}
+                    <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200/90 dark:border-cyan-500/40 flex items-center justify-center shadow-xs">
+                      <IconComp className="w-5 h-5 text-cyan-700 dark:text-cyan-400" />
                     </div>
                     <h4 className="text-base font-bold text-brand-text">
                       {pillar.title}

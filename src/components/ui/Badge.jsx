@@ -23,12 +23,13 @@ export function Badge({
   pulse = false,
   className = '',
 }) {
+  // Theme-aware high-contrast badge styles with crisp borders and optimal legibility
   const variantStyles = {
-    cyan: 'bg-cyan-50 dark:bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-500/30',
-    blue: 'bg-blue-50 dark:bg-blue-500/10 text-sky-700 dark:text-sky-300 border-blue-200 dark:border-blue-500/30',
-    purple: 'bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-500/30',
-    emerald: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30',
-    outline: 'bg-slate-100/90 dark:bg-white/5 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-white/10',
+    cyan: 'bg-cyan-50 dark:bg-cyan-950/60 text-cyan-800 dark:text-cyan-300 border-cyan-300/80 dark:border-cyan-500/40 font-semibold shadow-xs',
+    blue: 'bg-blue-50 dark:bg-blue-950/60 text-blue-950 dark:text-sky-300 border-blue-200 dark:border-blue-500/40 font-semibold shadow-xs',
+    purple: 'bg-purple-50 dark:bg-purple-950/60 text-purple-900 dark:text-purple-300 border-purple-200 dark:border-purple-500/40 font-semibold shadow-xs',
+    emerald: 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/40 font-semibold shadow-xs',
+    outline: 'bg-slate-100/90 dark:bg-slate-900/70 text-slate-800 dark:text-slate-200 border-slate-300 dark:border-slate-700/80 font-semibold shadow-xs',
   };
 
   const pulseColors = {

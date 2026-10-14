@@ -91,18 +91,18 @@ export function Hero() {
               </Button>
             </div>
 
-            {/* Quick Trust Highlights */}
-            <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-y-2 gap-x-6 text-xs text-brand-textSecondary">
+            {/* Quick Trust Highlights with high-contrast icons */}
+            <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-y-2 gap-x-6 text-xs text-slate-700 dark:text-slate-300 font-medium">
               <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-brand-cyan shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-cyan-700 dark:text-cyan-400 shrink-0" />
                 <span>Zero Downtime Deployments</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-cyan-600 dark:text-brand-cyan shrink-0" />
+                <ShieldCheck className="w-4 h-4 text-cyan-700 dark:text-cyan-400 shrink-0" />
                 <span>24/7 Dedicated Engineering Support</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Zap className="w-4 h-4 text-cyan-600 dark:text-brand-cyan shrink-0" />
+                <Zap className="w-4 h-4 text-cyan-700 dark:text-cyan-400 shrink-0" />
                 <span>Offline-Resilient POS Architecture</span>
               </div>
             </div>
@@ -155,34 +155,38 @@ export function Hero() {
                   </div>
                 </div>
 
-                {/* Key Metrics Grid */}
+                {/* Key Metrics Grid - Theme-aware high contrast stat containers */}
                 <div className="mt-5 grid grid-cols-2 gap-3 pt-4 border-t border-slate-200 dark:border-brand-border">
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-brand-card border border-slate-200 dark:border-brand-border">
-                    <p className="text-2xl font-extrabold text-cyan-600 dark:text-brand-cyan font-display">
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-xs">
+                    <p className="text-2xl font-extrabold text-cyan-700 dark:text-cyan-400 font-display">
                       50+
                     </p>
-                    <p className="text-xs text-brand-textSecondary font-medium mt-0.5">
+                    <p className="text-xs text-slate-700 dark:text-slate-300 font-medium mt-0.5">
                       Systems Shipped
                     </p>
                   </div>
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-brand-card border border-slate-200 dark:border-brand-border">
-                    <p className="text-2xl font-extrabold text-sky-600 dark:text-sky-400 font-display">
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-xs">
+                    <p className="text-2xl font-extrabold text-sky-700 dark:text-sky-400 font-display">
                       99.9%
                     </p>
-                    <p className="text-xs text-brand-textSecondary font-medium mt-0.5">
+                    <p className="text-xs text-slate-700 dark:text-slate-300 font-medium mt-0.5">
                       Operational Uptime
                     </p>
                   </div>
                 </div>
 
-                {/* Floating Micro Badge */}
-                <div className="mt-4 p-3 rounded-xl bg-cyan-50/80 dark:bg-gradient-to-r dark:from-cyan-950/30 dark:to-blue-950/30 border border-cyan-200 dark:border-cyan-500/30 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-cyan-500/15 dark:bg-cyan-500/20 flex items-center justify-center shrink-0">
-                    <Terminal className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                {/* Theme-aware terminal micro badge box with crisp contrast and legible typography */}
+                <div className="mt-4 p-3 rounded-xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-300/80 dark:border-slate-700/80 flex items-center gap-3 shadow-xs transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-cyan-100/90 dark:bg-cyan-950/60 border border-cyan-300/80 dark:border-cyan-500/40 flex items-center justify-center shrink-0">
+                    <Terminal className="w-4 h-4 text-cyan-800 dark:text-cyan-400" />
                   </div>
                   <div className="text-xs">
-                    <p className="text-brand-text font-medium">Bespoke Software Architecture</p>
-                    <p className="text-brand-textSecondary text-[11px]">Retail, ERP, E-Commerce, Mobile</p>
+                    <p className="text-slate-900 dark:text-slate-100 font-semibold tracking-tight">
+                      &gt;_ Bespoke Software Architecture
+                    </p>
+                    <p className="text-slate-600 dark:text-slate-400 text-[11px] font-medium">
+                      Retail, ERP, E-Commerce, Mobile
+                    </p>
                   </div>
                 </div>
               </div>
@@ -190,14 +194,14 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Global Statistics Ribbon */}
+        {/* Global Statistics Ribbon - Theme-aware high contrast metric cards */}
         <div className="mt-16 pt-10 border-t border-slate-200/80 dark:border-brand-border/60 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {COMPANY_INFO.stats.map((stat, idx) => (
-            <div key={idx} className="p-4 rounded-xl bg-white dark:bg-brand-surface border border-slate-200 dark:border-brand-border backdrop-blur-sm shadow-xs dark:shadow-sm">
-              <div className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-slate-900 via-sky-600 to-blue-600 dark:from-brand-text dark:via-cyan-400 dark:to-brand-cyan bg-clip-text text-transparent font-display">
+            <div key={idx} className="p-4 rounded-xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 backdrop-blur-sm shadow-xs dark:shadow-sm">
+              <div className="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-slate-950 via-sky-800 to-blue-800 dark:from-white dark:via-cyan-300 dark:to-cyan-400 bg-clip-text text-transparent font-display">
                 {stat.value}
               </div>
-              <div className="text-xs sm:text-sm text-brand-textSecondary font-medium mt-1">
+              <div className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-semibold mt-1">
                 {stat.label}
               </div>
             </div>

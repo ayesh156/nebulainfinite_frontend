@@ -127,7 +127,7 @@ export function Gallery() {
                     {item.tags.slice(0, 2).map((tag, idx) => (
                       <span
                         key={idx}
-                        className="text-[10px] font-medium text-cyan-700 dark:text-brand-cyan bg-cyan-50 dark:bg-cyan-500/10 px-2 py-0.5 rounded-md border border-cyan-200 dark:border-cyan-500/20"
+                        className="text-[10px] font-semibold text-cyan-800 dark:text-cyan-300 bg-cyan-50 dark:bg-cyan-950/60 px-2 py-0.5 rounded-md border border-cyan-200/90 dark:border-cyan-500/40"
                       >
                         #{tag}
                       </span>
@@ -178,7 +178,7 @@ export function Gallery() {
                     {selectedProject.tags.map((tag, idx) => (
                       <span
                         key={idx}
-                        className="text-xs font-mono text-cyan-700 dark:text-brand-cyan bg-cyan-50 dark:bg-brand-card px-2.5 py-1 rounded-md border border-cyan-200 dark:border-cyan-500/20"
+                        className="text-xs font-mono font-medium text-cyan-800 dark:text-cyan-300 bg-cyan-50 dark:bg-slate-900 px-2.5 py-1 rounded-md border border-cyan-200/90 dark:border-cyan-500/40"
                       >
                         #{tag}
                       </span>

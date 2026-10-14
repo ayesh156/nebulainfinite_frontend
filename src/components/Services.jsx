@@ -74,10 +74,11 @@ export function Services() {
                 <div>
                   <CardHeader className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <div className="w-12 h-12 rounded-xl bg-cyan-50 dark:bg-gradient-to-br dark:from-cyan-500/20 dark:to-blue-600/20 border border-cyan-200 dark:border-cyan-500/30 flex items-center justify-center group-hover:scale-110 group-hover:border-cyan-500 transition-all duration-300 shadow-[0_0_15px_rgba(2,132,199,0.08)] dark:shadow-[0_0_15px_rgba(0,242,254,0.15)]">
-                        <IconComponent className="w-6 h-6 text-cyan-600 dark:text-brand-cyan" />
+                      {/* Theme-aware icon container: soft clean cyan wash in light theme with high-contrast deep teal icon; subtle deep blue/slate tint in dark theme with glowing cyan icon */}
+                      <div className="w-12 h-12 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200/90 dark:border-cyan-500/40 flex items-center justify-center group-hover:scale-110 group-hover:border-cyan-500 transition-all duration-300 shadow-xs dark:shadow-[0_0_15px_rgba(0,242,254,0.15)]">
+                        <IconComponent className="w-6 h-6 text-cyan-700 dark:text-cyan-400 group-hover:text-cyan-800 dark:group-hover:text-cyan-300 transition-colors" />
                       </div>
-                      <Badge variant="blue" className="text-[11px]">
+                      <Badge variant="blue" className="text-[11px] font-semibold">
                         {service.badge}
                       </Badge>
                     </div>
@@ -95,14 +96,14 @@ export function Services() {
                     <ul className="space-y-2 text-xs sm:text-sm text-brand-textSecondary">
                       {service.features.map((feature, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <CheckCircle2 className="w-4 h-4 text-cyan-600 dark:text-brand-cyan shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-4 h-4 text-cyan-700 dark:text-cyan-400 shrink-0 mt-0.5" />
                           <span>{feature}</span>
                         </li>
                       ))}
                     </ul>
 
-                    {/* Highlight Box */}
-                    <div className="p-3 rounded-xl bg-cyan-50/70 dark:bg-brand-card border border-cyan-100 dark:border-brand-border text-xs text-cyan-800 dark:text-brand-cyan italic">
+                    {/* Highlight Box with crisp contrast and readable quote typography */}
+                    <div className="p-3 rounded-xl bg-cyan-50/80 dark:bg-slate-900/60 border border-cyan-200/70 dark:border-cyan-500/20 text-xs text-cyan-900 dark:text-cyan-300 font-medium italic">
                       "{service.highlight}"
                     </div>
                   </CardContent>
@@ -114,7 +115,7 @@ export function Services() {
                       href={inquiryUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs font-semibold text-cyan-600 dark:text-brand-cyan hover:underline flex items-center gap-1.5 transition-colors group/link"
+                      className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 hover:text-cyan-800 dark:hover:text-cyan-300 hover:underline flex items-center gap-1.5 transition-colors group/link"
                     >
                       <MessageSquare className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                       <span>Request Quote</span>

@@ -128,7 +128,7 @@ export function Contact() {
                 rel="noopener noreferrer"
                 className="p-5 rounded-2xl bg-white dark:bg-brand-surface border border-slate-200 dark:border-brand-border hover:border-emerald-500/50 hover:bg-emerald-50/20 dark:hover:bg-brand-card transition-all duration-300 flex items-center gap-4 group shadow-xs hover:shadow-md"
               >
-                <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/90 dark:border-emerald-500/40 flex items-center justify-center text-emerald-700 dark:text-emerald-400 group-hover:scale-110 transition-transform shrink-0 shadow-xs">
                   <Phone className="w-6 h-6" />
                 </div>
                 <div>
@@ -146,7 +146,7 @@ export function Contact() {
                 href={`mailto:${COMPANY_INFO.email}`}
                 className="p-5 rounded-2xl bg-white dark:bg-brand-surface border border-slate-200 dark:border-brand-border hover:border-cyan-500/50 hover:bg-cyan-50/20 dark:hover:bg-brand-card transition-all duration-300 flex items-center gap-4 group shadow-xs hover:shadow-md"
               >
-                <div className="w-12 h-12 rounded-xl bg-cyan-50 dark:bg-cyan-500/15 border border-cyan-200 dark:border-cyan-500/30 flex items-center justify-center text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200/90 dark:border-cyan-500/40 flex items-center justify-center text-cyan-700 dark:text-cyan-400 group-hover:scale-110 transition-transform shrink-0 shadow-xs">
                   <Mail className="w-6 h-6" />
                 </div>
                 <div className="overflow-hidden">
@@ -161,7 +161,7 @@ export function Contact() {
 
               {/* Physical Office Address */}
               <div className="p-5 rounded-2xl bg-white dark:bg-brand-surface border border-slate-200 dark:border-brand-border flex items-center gap-4 shadow-xs">
-                <div className="w-12 h-12 rounded-xl bg-sky-50 dark:bg-blue-500/15 border border-sky-200 dark:border-blue-500/30 flex items-center justify-center text-sky-600 dark:text-sky-400 shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-sky-50 dark:bg-blue-950/40 border border-sky-200/90 dark:border-blue-500/40 flex items-center justify-center text-sky-700 dark:text-sky-300 shrink-0 shadow-xs">
                   <MapPin className="w-6 h-6" />
                 </div>
                 <div>
