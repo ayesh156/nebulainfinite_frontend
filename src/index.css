@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root,
+  .light {
+    color-scheme: light;
+    --color-bg-primary: 248 250 252; /* slate-50 */
+    --color-bg-surface: 255 255 255; /* white */
+    --color-bg-card: 241 245 249; /* slate-100 */
+    --color-bg-card-hover: 226 232 240; /* slate-200 */
+    --color-border: 226 232 240; /* slate-200 */
+    --color-border-hover: 2 132 199; /* sky-600 */
+    --color-text-primary: 15 23 42; /* slate-900 */
+    --color-text-secondary: 71 85 105; /* slate-600 */
+    --color-text-muted: 100 116 139; /* slate-500 */
+    --color-cyan: 2 132 199; /* sky-600 */
+    --hero-gradient-center: rgba(14, 165, 233, 0.08);
+    --hero-gradient-edge: rgba(248, 250, 252, 0.98);
+  }
+
+  .dark {
+    color-scheme: dark;
+    --color-bg-primary: 5 8 20;
+    --color-bg-surface: 10 15 36;
+    --color-bg-card: 15 23 56;
+    --color-bg-card-hover: 22 32 77;
+    --color-border: 56 189 248;
+    --color-border-hover: 0 242 254;
+    --color-text-primary: 248 250 252;
+    --color-text-secondary: 203 213 225;
+    --color-text-muted: 148 163 184;
+    --color-cyan: 0 242 254;
+    --hero-gradient-center: rgba(6, 182, 212, 0.15);
+    --hero-gradient-edge: rgba(5, 8, 20, 0.95);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: rgb(var(--color-bg-primary));
+    color: rgb(var(--color-text-primary));
+    overflow-x: hidden;
+  }
+
+  /* Custom Futuristic Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgb(var(--color-bg-primary));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+    border: 2px solid rgb(var(--color-bg-primary));
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border: 2px solid #050814;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #0284c7;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #00f2fe;
+  }
+}
+
+@layer utilities {
+  .text-glow {
+    text-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+  }
+
+  .light .text-glow {
+    text-shadow: none;
+  }
+
+  .box-glow {
+    box-shadow: 0 0 30px rgba(0, 242, 254, 0.15);
+  }
+
+  .light .box-glow {
+    box-shadow: 0 10px 30px rgba(2, 132, 199, 0.08);
+  }
+}
