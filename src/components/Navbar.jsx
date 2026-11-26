@@ -4,7 +4,7 @@ import { Menu, X, MessageSquare, ArrowRight } from 'lucide-react';
 import { COMPANY_INFO, NAV_LINKS } from '../data/companyData';
 import { Button } from './ui/Button';
 import { ThemeToggle } from './ThemeToggle';
-import { navigateTo, scrollToSection, SECTION_TO_PATH, resolveRoute } from '../utils/navigation';
+import { useRouter } from '../context/RouterContext';
 
 /**
  * Top navigation bar featuring glassmorphic blur, active section scrollspy detection,
@@ -22,41 +22,9 @@ import { navigateTo, scrollToSection, SECTION_TO_PATH, resolveRoute } from '../u
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('hero');
+  const { currentPath, navigate: navigateTo } = useRouter();
 
-  // Handle initial page load, deep links, hash cleanup, and browser history popstate
-  useEffect(() => {
-    // 1. Clean up legacy or external hash URLs (e.g. /#services -> /services)
-    if (window.location.hash) {
-      const cleanHash = window.location.hash.replace('#', '');
-      const routeInfo = resolveRoute(cleanHash);
-      window.history.replaceState({ sectionId: routeInfo.id }, '', routeInfo.path);
-      // Delay slightly for initial layout stabilization
-      setTimeout(() => {
-        scrollToSection(routeInfo.id, { replace: true, updateHistory: false });
-      }, 100);
-    } else if (window.location.pathname && window.location.pathname !== '/') {
-      // 2. Direct deep link load by pathname (e.g. /services or /contact)
-      const routeInfo = resolveRoute(window.location.pathname);
-      if (routeInfo.id !== 'hero') {
-        setTimeout(() => {
-          scrollToSection(routeInfo.id, { replace: true, updateHistory: false });
-        }, 100);
-      }
-    }
-
-    // 3. Handle browser Back and Forward navigation buttons
-    const handlePopState = () => {
-      const routeInfo = resolveRoute(window.location.pathname);
-      scrollToSection(routeInfo.id, { replace: true, updateHistory: false });
-      setActiveSection(routeInfo.id);
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  // Track scroll position for dynamic glassmorphic navbar styling & active section highlight
+  // Track scroll position for dynamic glassmorphic navbar styling
   useEffect(() => {
     let ticking = false;
 
@@ -64,47 +32,21 @@ export function Navbar() {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           setIsScrolled(window.scrollY > 20);
-
-          const sections = NAV_LINKS.map((link) => link.sectionId || link.href.replace('/', ''));
-          const scrollPos = window.scrollY + 220;
-
-          // If at the very top of the page, activate hero
-          if (window.scrollY < 100) {
-            setActiveSection('hero');
-            if (window.location.pathname !== '/' && !window.location.hash) {
-              window.history.replaceState({ sectionId: 'hero' }, '', '/');
-            }
-            ticking = false;
-            return;
-          }
-
-          for (let i = sections.length - 1; i >= 0; i--) {
-            const section = sections[i];
-            const el = document.getElementById(section);
-            if (el) {
-              const top = el.offsetTop;
-              const height = el.offsetHeight;
-              if (scrollPos >= top && scrollPos < top + height) {
-                if (activeSection !== section) {
-                  setActiveSection(section);
-                  const canonicalPath = SECTION_TO_PATH[section] || '/';
-                  if (window.location.pathname !== canonicalPath && !window.location.hash) {
-                    window.history.replaceState({ sectionId: section }, '', canonicalPath);
-                  }
-                }
-                break;
-              }
-            }
-          }
           ticking = false;
         });
         ticking = true;
       }
     };
 
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [activeSection]);
+  }, []);
+
+  // Close mobile drawer automatically on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [currentPath]);
 
   // Prevent body scrolling and handle Escape dismissal when mobile navigation drawer is open
   useEffect(() => {
@@ -173,8 +115,7 @@ export function Navbar() {
             {/* Desktop Nav Items */}
             <nav className="hidden md:flex items-center gap-1 bg-white/80 dark:bg-brand-surface/70 border border-slate-200 dark:border-brand-border/60 rounded-full px-4 py-1.5 backdrop-blur-md shadow-xs">
               {NAV_LINKS.map((link) => {
-                const targetSection = link.sectionId || link.href.replace('/', '') || 'hero';
-                const isActive = activeSection === targetSection;
+                const isActive = currentPath === link.href;
                 return (
                   <a
                     key={link.href}
@@ -342,8 +283,7 @@ export function Navbar() {
 
           <nav className="flex flex-col gap-1.5">
             {NAV_LINKS.map((link, idx) => {
-              const targetSection = link.sectionId || link.href.replace('/', '') || 'hero';
-              const isActive = activeSection === targetSection;
+              const isActive = currentPath === link.href;
               const formattedIndex = String(idx + 1).padStart(2, '0');
 
               return (

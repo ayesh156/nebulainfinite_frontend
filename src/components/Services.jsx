@@ -7,6 +7,7 @@ import {
   Smartphone,
   Cpu,
   Sparkles,
+  Video,
   ArrowRight,
   CheckCircle2,
   MessageSquare,
@@ -30,6 +31,7 @@ const iconMap = {
   Smartphone: Smartphone,
   Cpu: Cpu,
   Sparkles: Sparkles,
+  Video: Video,
 };
 
 /**

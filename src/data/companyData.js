@@ -166,6 +166,21 @@ export const SERVICES = [
     ],
     highlight: "Crafts intuitive digital interfaces your team and customers will love.",
   },
+  {
+    id: "ai-video-marketing",
+    title: "AI Video Marketing & Creative",
+    iconName: "Video",
+    badge: "AI Creative",
+    description:
+      "High-impact AI-powered product commercials, brand reels, and automated promotional video pipelines built to maximize digital reach.",
+    features: [
+      "AI-assisted scriptwriting, voiceover, and motion graphics",
+      "High-converting product showcase & SaaS demo reels",
+      "Multi-format exports for Meta, TikTok, and YouTube Shorts",
+      "Consistent corporate visual identity & brand storytelling",
+    ],
+    highlight: "Accelerates campaign production while elevating brand authority online.",
+  },
 ];
 
 /**

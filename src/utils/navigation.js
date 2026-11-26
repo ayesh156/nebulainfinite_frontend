@@ -1,132 +1,103 @@
 /**
  * @file navigation.js
- * @description Centralized routing, URL history, and smooth section navigation utility.
- * Eliminates hash (#) fragment URLs in favor of clean HTML5 History URLs (e.g. /services, /portfolio, /contact)
- * while preserving smooth animated section transitions, browser back/forward history, and deep-link page loads.
+ * @description Centralized multi-page routing, URL history, and smooth page navigation utility.
+ * Eliminates hash (#) fragment URLs in favor of clean HTML5 History URLs
+ * (e.g. /, /services, /portfolio, /projects, /about, /contact) while supporting
+ * browser back/forward history, deep-link page loads, and smooth scroll-to-top transitions.
  */
 
 /**
- * Route-to-section mapping table.
- * Correlates clean pathname URLs with document element IDs.
+ * Custom DOM event name dispatched whenever the application navigates via pushState/replaceState,
+ * allowing RouterProvider and Navbar to react immediately to route changes.
+ */
+export const ROUTE_CHANGE_EVENT = 'nebula:route-change';
+
+/**
+ * Canonical route configuration table.
+ * Maps clean pathname URLs (including aliases like /projects and /gallery)
+ * to a canonical route path and page metadata.
  *
- * @type {Record<string, { id: string, path: string }>}
+ * @type {Record<string, { path: string, title: string }>}
  */
 export const ROUTE_MAP = {
-  '/': { id: 'hero', path: '/' },
-  '/services': { id: 'services', path: '/services' },
-  '/portfolio': { id: 'gallery', path: '/portfolio' },
-  '/gallery': { id: 'gallery', path: '/portfolio' },
-  '/about': { id: 'about', path: '/about' },
-  '/contact': { id: 'contact', path: '/contact' },
+  '/': { path: '/', title: 'Nebula Infinite | Enterprise POS, ERP & Custom Software' },
+  '/services': { path: '/services', title: 'Services | Nebula Infinite' },
+  '/portfolio': { path: '/portfolio', title: 'Projects & Live Demos | Nebula Infinite' },
+  '/projects': { path: '/portfolio', title: 'Projects & Live Demos | Nebula Infinite' },
+  '/gallery': { path: '/portfolio', title: 'Projects & Live Demos | Nebula Infinite' },
+  '/about': { path: '/about', title: 'About Us | Nebula Infinite' },
+  '/contact': { path: '/contact', title: 'Contact Us | Nebula Infinite' },
 };
 
 /**
- * Section element ID to canonical clean pathname mapping.
+ * Normalizes a pathname by trimming trailing slashes (except root '/') and lowercasing.
  *
- * @type {Record<string, string>}
+ * @param {string} pathname - Raw URL pathname
+ * @returns {string} Normalized pathname
  */
-export const SECTION_TO_PATH = {
-  hero: '/',
-  services: '/services',
-  gallery: '/portfolio',
-  about: '/about',
-  contact: '/contact',
-};
+export function normalizePathname(pathname) {
+  if (!pathname || pathname === '/') return '/';
+  const trimmed = pathname.replace(/\/+$/, '').toLowerCase();
+  return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+}
 
 /**
- * Height offset (in pixels) for the fixed top navigation bar.
- */
-const NAVBAR_OFFSET = 80;
-
-/**
- * Resolves a given target string (pathname, section ID, or legacy hash) to an element ID and canonical path.
+ * Resolves a given target string (pathname, legacy section ID, or legacy hash)
+ * to a canonical route object `{ path, title }`.
  *
- * @param {string} target - Route path (e.g., '/services'), section ID (e.g., 'services'), or legacy hash ('#services')
- * @returns {{ id: string, path: string }}
+ * @param {string} target - Route path (e.g., '/services'), alias ('/projects'), or legacy hash ('#services')
+ * @returns {{ path: string, title: string }}
  */
 export function resolveRoute(target) {
   if (!target) {
-    return { id: 'hero', path: '/' };
+    return ROUTE_MAP['/'];
   }
 
-  // Strip legacy hash prefix if present
-  const clean = target.startsWith('#') ? target.slice(1) : target;
+  // Strip legacy hash prefix if present (e.g. '#services' -> '/services')
+  const withoutHash = target.startsWith('#') ? target.slice(1) : target;
+  const normalized = normalizePathname(withoutHash);
 
-  // Direct route lookup (e.g. '/services')
-  if (ROUTE_MAP[clean]) {
-    return ROUTE_MAP[clean];
+  if (ROUTE_MAP[normalized]) {
+    return ROUTE_MAP[normalized];
   }
 
-  // With leading slash (e.g. 'services' -> '/services')
-  const withSlash = `/${clean}`;
-  if (ROUTE_MAP[withSlash]) {
-    return ROUTE_MAP[withSlash];
-  }
-
-  // Section ID lookup (e.g. 'gallery')
-  if (SECTION_TO_PATH[clean]) {
-    return { id: clean, path: SECTION_TO_PATH[clean] };
-  }
-
-  return { id: 'hero', path: '/' };
+  // Fallback unknown routes to Home
+  return ROUTE_MAP['/'];
 }
 
 /**
- * Smoothly scrolls the window to the designated section and synchronizes browser history with a clean URL.
+ * Navigates to a target route using HTML5 History API without full-page reload,
+ * updates the document title, dispatches a route-change event, and scrolls smoothly to top.
  *
- * @param {string} target - Pathname ('/services') or section ID ('services')
+ * @param {string} target - Target pathname (e.g. '/portfolio', '/services')
+ * @param {React.MouseEvent} [event] - Optional click event to prevent default anchor reload
  * @param {Object} [options={}] - Navigation options
  * @param {boolean} [options.replace=false] - Whether to replace history state instead of pushing
- * @param {boolean} [options.updateHistory=true] - Whether to modify browser history URL
- * @param {ScrollBehavior} [options.behavior='smooth'] - Scroll animation behavior
+ * @param {ScrollBehavior} [options.behavior='smooth'] - Scroll-to-top behavior
  */
-export function scrollToSection(target, options = {}) {
-  const { replace = false, updateHistory = true, behavior = 'smooth' } = options;
-  const { id, path } = resolveRoute(target);
-
-  if (typeof window === 'undefined') return;
-
-  // Update browser URL without hash
-  if (updateHistory && window.location.pathname !== path) {
-    if (replace) {
-      window.history.replaceState({ sectionId: id }, '', path);
-    } else {
-      window.history.pushState({ sectionId: id }, '', path);
-    }
-  }
-
-  // Scroll to hero/top
-  if (id === 'hero' || path === '/') {
-    window.scrollTo({
-      top: 0,
-      behavior,
-    });
-    return;
-  }
-
-  // Scroll to section element
-  const element = document.getElementById(id);
-  if (element) {
-    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-    const offsetPosition = Math.max(0, elementPosition - NAVBAR_OFFSET);
-
-    window.scrollTo({
-      top: offsetPosition,
-      behavior,
-    });
-  }
-}
-
-/**
- * Click handler helper for anchor links and buttons to prevent hash appending
- * and smoothly transition using clean URLs.
- *
- * @param {string} target - Pathname or section identifier
- * @param {React.MouseEvent} [event] - Optional click event to prevent default hash jumping
- */
-export function navigateTo(target, event) {
+export function navigateTo(target, event, options = {}) {
   if (event && typeof event.preventDefault === 'function') {
     event.preventDefault();
   }
-  scrollToSection(target, { replace: false, updateHistory: true });
+
+  if (typeof window === 'undefined') return;
+
+  const { replace = false, behavior = 'smooth' } = options;
+  const { path, title } = resolveRoute(target);
+  const currentNormalized = normalizePathname(window.location.pathname);
+
+  if (currentNormalized !== path || window.location.hash) {
+    if (replace) {
+      window.history.replaceState({ path }, '', path);
+    } else {
+      window.history.pushState({ path }, '', path);
+    }
+    document.title = title;
+    window.dispatchEvent(new CustomEvent(ROUTE_CHANGE_EVENT, { detail: { path } }));
+  }
+
+  window.scrollTo({
+    top: 0,
+    behavior,
+  });
 }

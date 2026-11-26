@@ -1,40 +1,58 @@
 import React from 'react';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { Services } from './components/Services';
-import { Gallery } from './components/Gallery';
-import { About } from './components/About';
-import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
-import { WhatsAppFloat } from './components/WhatsAppFloat';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Layout } from './components/Layout';
+import { useRouter } from './context/RouterContext';
+import { HomePage } from './pages/HomePage';
+import { ServicesPage } from './pages/ServicesPage';
+import { PortfolioPage } from './pages/PortfolioPage';
+import { AboutPage } from './pages/AboutPage';
+import { ContactPage } from './pages/ContactPage';
 
 /**
- * Nebula Infinite Web Application root composition.
- * Assembles all modular components within a responsive, high-converting layout
- * with variable-driven Dark / Light / System theming.
+ * Nebula Infinite Multi-Page Web Application root composition.
+ * Maps clean pathname routes (`/`, `/services`, `/portfolio`, `/projects`, `/about`, `/contact`)
+ * to dedicated page views wrapped in the persistent Layout (Navbar + Footer + WhatsAppFloat).
  *
  * @returns {JSX.Element}
  */
 export default function App() {
+  const { currentPath } = useRouter();
+
+  /**
+   * Resolves the active page component for the current canonical route.
+   *
+   * @returns {JSX.Element}
+   */
+  const renderPage = () => {
+    switch (currentPath) {
+      case '/services':
+        return <ServicesPage />;
+      case '/portfolio':
+        return <PortfolioPage />;
+      case '/about':
+        return <AboutPage />;
+      case '/contact':
+        return <ContactPage />;
+      case '/':
+      default:
+        return <HomePage />;
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-text flex flex-col selection:bg-cyan-600 selection:text-white dark:selection:bg-brand-cyan dark:selection:text-slate-950 font-sans antialiased overflow-x-hidden transition-colors duration-300">
-      {/* Fixed top navigation bar with theme toggle */}
-      <Navbar />
-
-      {/* Main page content sections */}
-      <main className="flex-1">
-        <Hero />
-        <Services />
-        <Gallery />
-        <About />
-        <Contact />
-      </main>
-
-      {/* Comprehensive footer with sitemap and social links */}
-      <Footer />
-
-      {/* Direct floating WhatsApp CTA */}
-      <WhatsAppFloat />
-    </div>
+    <Layout>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentPath}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
+          className="flex-1 flex flex-col"
+        >
+          {renderPage()}
+        </motion.div>
+      </AnimatePresence>
+    </Layout>
   );
 }

@@ -15,12 +15,13 @@ import { defaultViewport, fadeUpVariant } from '../utils/motion';
  */
 export function Footer() {
   /**
-   * Smoothly scrolls to the top of the document and resets URL to root.
+   * Smoothly scrolls to the top of the current page.
    *
    * @param {React.MouseEvent} [e]
    */
   const scrollToTop = (e) => {
-    navigateTo('/', e);
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   /**
